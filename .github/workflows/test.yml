@@ -40,15 +40,23 @@ jobs:
         shell: bash
         run: |
           python -m venv env
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            source env/Scripts/activate
-          else
-            source env/bin/activate
-          fi
-          pip install --upgrade pip 
-          pip install -U setuptools wheel maturin pytest virtualenv
-          maturin develop --release
-      - name: Test
+      - name: Install build and test deps (Windows)
+        if: runner.os == 'Windows'
         run: |
-          source env/bin/activate
-          python -m pytest
+          env\Scripts\python -m pip install --upgrade pip
+          env\Scripts\python -m pip install -U setuptools wheel maturin pytest
+          env\Scripts\python -m maturin develop --release
+      - name: Install build and test deps (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          env/bin/python -m pip install --upgrade pip
+          env/bin/python -m pip install -U setuptools wheel maturin pytest
+          env/bin/python -m maturin develop --release
+      - name: Test (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          env\Scripts\python -m pytest -q
+      - name: Test (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          env/bin/python -m pytest -q
