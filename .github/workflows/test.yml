@@ -49,6 +49,7 @@ jobs:
           pip install -U setuptools wheel maturin pytest virtualenv
           maturin develop --release
       - name: Test
+        shell: bash
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then  
             source env/Scripts/activate  
