@@ -12,13 +12,10 @@ jobs:
         exclude:
           - os: ubuntu-latest
             python-version: "3.14"
-            allow-failure: true
           - os: macos-latest
             python-version: "3.14"
-            allow-failure: true
           - os: windows-latest
             python-version: "3.14"
-            allow-failure: true
         include:
           - os: ubuntu-latest
             python-version: "3.14"
