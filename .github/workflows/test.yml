@@ -45,7 +45,8 @@ jobs:
           else
             source env/bin/activate
           fi
-          pip install --upgrade pip setuptools wheel maturin pytest virtualenv
+          pip install --upgrade pip 
+          pip install -U setuptools wheel maturin pytest virtualenv
           maturin develop --release
       - name: Test
         run: |
