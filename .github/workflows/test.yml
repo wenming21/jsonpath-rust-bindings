@@ -50,5 +50,9 @@ jobs:
           maturin develop --release
       - name: Test
         run: |
-          source env/bin/activate
+          if [ "$RUNNER_OS" == "Windows" ]; then  
+            source env/Scripts/activate  
+          else  
+            source env/bin/activate  
+          fi  
           python -m pytest
