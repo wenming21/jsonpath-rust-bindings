@@ -37,15 +37,16 @@ jobs:
           - runner: ubuntu-22.04
             target: ppc64le
         python-version: [ "3.8", "3.x", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+      fail-fast: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
-      # - uses: actions/setup-python@v5
+      # - uses: actions/setup-python@v6
       #   with:
       #     python-version: ${{ matrix.python-version }}
       #     allow-prereleases: true
@@ -59,8 +60,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-linux-${{ matrix.platform.target }}
-          # -${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
+          name: wheels-linux-${{ matrix.platform.target }}-${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
           path: target/wheels
           overwrite: true
 
@@ -78,15 +78,16 @@ jobs:
           - runner: ubuntu-22.04
             target: armv7
         python-version: ["3.8", "3.x", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+      fail-fast: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
-      # - uses: actions/setup-python@v5
+      # - uses: actions/setup-python@v6
       #   with:
       #     python-version: ${{ matrix.python-version }}
       #     allow-prereleases: true
@@ -128,16 +129,17 @@ jobs:
               runner: windows-latest
               target: x86
             python-version: "pypy3.11"
+      fail-fast: false
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
-      # - uses: actions/setup-python@v5
+      # - uses: actions/setup-python@v6
       #   with:
       #     python-version: ${{ matrix.python-version }}
       #     architecture: ${{ matrix.platform.target }}
@@ -151,8 +153,7 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-windows-${{ matrix.platform.target }}
-          # -${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
+          name: wheels-windows-${{ matrix.platform.target }}-${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
           path: target/wheels
           overwrite: true
 
@@ -166,15 +167,16 @@ jobs:
           - runner: macos-14
             target: aarch64
         python-version: [ "3.8", "3.x", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+      fail-fast: false
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
-      # - uses: actions/setup-python@v5
+      # - uses: actions/setup-python@v6
       #   with:
       #     python-version: ${{ matrix.python-version }}
       #     allow-prereleases: true
@@ -187,15 +189,14 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-macos-${{ matrix.platform.target }}
-          # -${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
+          name: wheels-macos-${{ matrix.platform.target }}-${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
           path: target/wheels
           overwrite: true
 
   sdist:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build sdist
         uses: PyO3/maturin-action@v1
         with:
