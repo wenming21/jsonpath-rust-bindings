@@ -39,10 +39,16 @@ jobs:
         python-version: [ "3.8", "3.x", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
+      # - uses: actions/setup-python@v5
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
+      #     allow-prereleases: true
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -53,7 +59,8 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-linux-${{ matrix.platform.target }}-${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
+          name: wheels-linux-${{ matrix.platform.target }}
+          # -${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
           path: target/wheels
           overwrite: true
 
@@ -73,10 +80,16 @@ jobs:
         python-version: ["3.8", "3.x", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
+      # - uses: actions/setup-python@v5
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
+      #     allow-prereleases: true
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -87,7 +100,8 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-musllinux-${{ matrix.platform.target }}-${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
+          name: wheels-musllinux-${{ matrix.platform.target }}
+          # -${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
           path: target/wheels
           overwrite: true
 
@@ -117,11 +131,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
+      # - uses: actions/setup-python@v5
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
+      #     architecture: ${{ matrix.platform.target }}
+      #     allow-prereleases: true
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -131,7 +151,8 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-windows-${{ matrix.platform.target }}-${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
+          name: wheels-windows-${{ matrix.platform.target }}
+          # -${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
           path: target/wheels
           overwrite: true
 
@@ -147,10 +168,16 @@ jobs:
         python-version: [ "3.8", "3.x", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
+      # - uses: actions/setup-python@v5
+      #   with:
+      #     python-version: ${{ matrix.python-version }}
+      #     allow-prereleases: true
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
@@ -160,7 +187,8 @@ jobs:
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-macos-${{ matrix.platform.target }}-${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
+          name: wheels-macos-${{ matrix.platform.target }}
+          # -${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
           path: target/wheels
           overwrite: true
 
