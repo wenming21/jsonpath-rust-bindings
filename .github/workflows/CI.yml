@@ -36,13 +36,10 @@ jobs:
       - uses: actions/checkout@v5
       - name: Set up Python
         uses: actions/setup-python@v6
-        id: setup-python
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
-          cache: 'pip'
-          cache-dependency-path: pyproject.toml
       - name: Create virtualenv
         shell: bash
         run: |
@@ -95,12 +92,9 @@ jobs:
       - uses: actions/checkout@v5
       - name: Set up Python
         uses: actions/setup-python@v6
-        id: setup-python
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
-          cache: 'pip'
-          cache-dependency-path: pyproject.toml
       - name: Create virtualenv
         shell: bash
         run: |
@@ -163,13 +157,10 @@ jobs:
       - uses: actions/checkout@v5
       - name: Set up Python
         uses: actions/setup-python@v6
-        id: setup-python
         with:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
-          cache: 'pip'
-          cache-dependency-path: pyproject.toml
       - name: Create virtualenv
         shell: bash
         run: |
@@ -217,12 +208,9 @@ jobs:
       - uses: actions/checkout@v5
       - name: Set up Python
         uses: actions/setup-python@v6
-        id: setup-python
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
-          cache: 'pip'
-          cache-dependency-path: pyproject.toml
       - name: Create virtualenv
         shell: bash
         run: |
