@@ -55,7 +55,8 @@ jobs:
         with:
           name: wheels-linux-${{ matrix.platform.target }}
           path: target/wheels
-          overwrite: true
+          # overwrite: true
+          merge-mode: replace  # 或replace # append
 
   musllinux:
     runs-on: ${{ matrix.platform.runner }}
@@ -89,7 +90,8 @@ jobs:
         with:
           name: wheels-musllinux-${{ matrix.platform.target }}
           path: target/wheels
-          overwrite: true
+          # overwrite: true
+          merge-mode: replace  # 或replace # append
 
   windows:
     runs-on: ${{ matrix.platform.runner }}
@@ -133,7 +135,8 @@ jobs:
         with:
           name: wheels-windows-${{ matrix.platform.target }}
           path: target/wheels
-          overwrite: true
+          # overwrite: true
+          merge-mode: replace  # 或replace # append
 
   macos:
     runs-on: ${{ matrix.platform.runner }}
@@ -162,7 +165,8 @@ jobs:
         with:
           name: wheels-macos-${{ matrix.platform.target }}
           path: target/wheels
-          overwrite: true
+          # overwrite: true
+          merge-mode: replace  # 或replace # append
 
   sdist:
     runs-on: ubuntu-latest
