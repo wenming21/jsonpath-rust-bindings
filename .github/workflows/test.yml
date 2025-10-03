@@ -34,18 +34,17 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
-          # cache: pip
+          cache: pip
           cache-dependency-path: pyproject.toml
       - name: Create virtualenv and install package
         shell: bash
         run: |
           python -m venv env
-          python -m pip install --upgrade pip
-          # if [[ "${{ matrix.python-version }}" == "pypy3.11" ]]; then
-            # echo "Skipping pip upgrade for PyPy3.11"
-          # else
-            # python -m pip install --upgrade pip
-          # fi 
+          if [[ "${{ matrix.python-version }}" == "pypy3.11" ]]; then
+            echo "Skipping pip upgrade for PyPy3.11"
+          else
+            python -m pip install --upgrade pip
+          fi 
           if [ "$RUNNER_OS" == "Windows" ]; then
             source env/Scripts/activate
           else
