@@ -21,6 +21,7 @@ permissions:
 jobs:
   # 安装Python环境的独立Job - Linux
   # setup-python-linux:
+  #   name: Setup Python Environments (Linux)
   #   runs-on: ${{ matrix.platform.runner }}
   #   strategy:
   #     matrix:
@@ -46,30 +47,15 @@ jobs:
   #         allow-prereleases: true
 
   # 安装Python环境的独立Job - Windows-64
-  # setup-python-windows-64:
-  #   name: Setup Python Environments (Windows_64)
+  # setup-python-windows:
+  #   name: Setup Python Environments (Windows)
   #   runs-on: ${{ matrix.platform.runner }}
   #   strategy:
   #     matrix:
   #       platform:
   #         - runner: windows-latest
-  #           target: x64
-  #         # - runner: windows-latest
-  #         #   target: x86
+  #           target: x64 # 64-bit Python interpreter,note that 32-bit Python interpreter is not supported on actions/setup-python@v6/Windows
   #       python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
-  #       # exclude:
-  #       #   - platform:
-  #       #       runner: windows-latest
-  #       #       target: x86
-  #       #     python-version: "pypy3.9"
-  #       #   - platform:
-  #       #       runner: windows-latest
-  #       #       target: x86
-  #       #     python-version: "pypy3.10"
-  #       #   - platform:
-  #       #       runner: windows-latest
-  #       #       target: x86
-  #       #     python-version: "pypy3.11"
   #   steps:
   #     - uses: actions/checkout@v5
   #     - uses: actions/setup-python@v6
@@ -175,11 +161,11 @@ jobs:
     needs: setup-python-macos
     strategy:
       matrix:
-        python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+        # python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
         include:
-          - runner: macos-13
+          - runner: macos-15
             target: x86_64
-          - runner: macos-14
+          - runner: macos-15
             target: aarch64
     steps:
       - uses: actions/checkout@v5
@@ -187,13 +173,14 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.target }}
-          args: --release --out target/wheels ${{ startsWith(matrix.python-version, 'pypy') && format('-i {0}', matrix.python-version) || format('-i python{0}', matrix.python-version) }}
-          # args: --release --out target/wheels --find-interpreter
+          # args: --release --out target/wheels ${{ startsWith(matrix.python-version, 'pypy') && format('-i {0}', matrix.python-version) || format('-i python{0}', matrix.python-version) }}
+          args: --release --out target/wheels --find-interpreter
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-macos-${{ matrix.platform.target }}-${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
+          name: wheels-macos-${{ matrix.target }}
+          # name: wheels-macos-${{ matrix.target }}-${{ startsWith(matrix.python-version, 'pypy') && matrix.python-version || format('py{0}', matrix.python-version) }}
           path: target/wheels
 
   sdist:
