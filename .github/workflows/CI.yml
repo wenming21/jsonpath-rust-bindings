@@ -18,6 +18,10 @@ on:
 permissions:
   contents: read
 
+env:
+  PYTHON_EXECUTABLE: ${{ env.PYTHON_EXECUTABLE }}
+  PIP_EXECUTABLE: ${{ env.PIP_EXECUTABLE }}
+
 jobs:
   # Setup Python Environments Jobs
   # These jobs will set up the Python environments for the other jobs to use.
@@ -47,10 +51,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
-      # - uses: actions/setup-python@v5
-      #   with:
-      #     python-version: ${{ matrix.python-version }}
-      #     allow-prereleases: true
+      - name: Set Python environment variables
+        id: python-env
+        run: |
+          echo "PYTHON_PATH=$(which python)" >> $GITHUB_ENV
+          echo "PYTHON_EXECUTABLE=$(which python)" >> $GITHUB_ENV
+          echo "PIP_EXECUTABLE=$(which pip)" >> $GITHUB_ENV
+          echo "PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
 
   setup-python-windows:
     name: Setup Python Environments (Windows)
@@ -69,11 +76,13 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
-      # - uses: actions/setup-python@v5
-      #   with:
-      #     python-version: ${{ matrix.python-version }}
-      #     architecture: ${{ matrix.platform.target }}
-      #     allow-prereleases: true
+      - name: Set Python environment variables
+        id: python-env
+        run: |
+          echo "PYTHON_PATH=$(which python)" >> $GITHUB_ENV
+          echo "PYTHON_EXECUTABLE=$(which python)" >> $GITHUB_ENV
+          echo "PIP_EXECUTABLE=$(which pip)" >> $GITHUB_ENV
+          echo "PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
 
   setup-python-macos:
     name: Setup Python Environments (macOS)
@@ -93,10 +102,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
-      # - uses: actions/setup-python@v5
-      #   with:
-      #     python-version: ${{ matrix.python-version }}
-      #     allow-prereleases: true
+      - name: Set Python environment variables
+        id: python-env
+        run: |
+          echo "PYTHON_PATH=$(which python)" >> $GITHUB_ENV
+          echo "PYTHON_EXECUTABLE=$(which python)" >> $GITHUB_ENV
+          echo "PIP_EXECUTABLE=$(which pip)" >> $GITHUB_ENV
+          echo "PYTHON_VERSION=${{ matrix.python-version }}" >> $GITHUB_ENV
 
   # Build Jobs
   # These jobs will build the wheels for all Python versions and upload them as artifacts.
