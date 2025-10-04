@@ -47,7 +47,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          if ${{ startsWith(matrix.python-version, 'pypy') }};then
+          if [[${{ startsWith(matrix.python-version, 'pypy') }}]];then
             args: --release --out target/wheels -i ${{ matrix.python-version }}
           else
             args: --release --out target/wheels -i python${{ matrix.python-version }}
