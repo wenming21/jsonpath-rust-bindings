@@ -46,7 +46,7 @@ jobs:
             target
             ~/.cargo/registry
             ~/.cargo/git
-          key: rust-${{ matrix.platform.target }}-${{ matrix.python-version }}-${{ hashFiles('**/Cargo.lock') }}
+          key: rust-${{ matrix.platform.target }}-${{ hashFiles('**/Cargo.lock') }}
       - name: Cache wheels
         uses: actions/cache@v3
         with:
@@ -92,7 +92,7 @@ jobs:
             target
             ~/.cargo/registry
             ~/.cargo/git
-          key: rust-${{ matrix.platform.target }}-${{ matrix.python-version }}-${{ hashFiles('**/Cargo.lock') }}
+          key: rust-${{ matrix.platform.target }}-${{ hashFiles('**/Cargo.lock') }}
       - name: Cache wheels
         uses: actions/cache@v3
         with:
@@ -147,7 +147,7 @@ jobs:
             target
             ~/.cargo/registry
             ~/.cargo/git
-          key: rust-${{ matrix.platform.target }}-${{ matrix.python-version }}-${{ hashFiles('**/Cargo.lock') }}
+          key: rust-${{ matrix.platform.target }}-${{ hashFiles('**/Cargo.lock') }}
       - name: Cache wheels
         uses: actions/cache@v3
         with:
@@ -189,7 +189,7 @@ jobs:
             target
             ~/.cargo/registry
             ~/.cargo/git
-          key: rust-${{ matrix.platform.target }}-${{ matrix.python-version }}-${{ hashFiles('**/Cargo.lock') }}
+          key: rust-${{ matrix.platform.target }}-${{ hashFiles('**/Cargo.lock') }}
       - name: Cache wheels
         uses: actions/cache@v3
         with:
