@@ -18,10 +18,6 @@ on:
 permissions:
   contents: read
 
-env:
-  PYTHON_EXECUTABLE: ${{ env.PYTHON_EXECUTABLE }}
-  PIP_EXECUTABLE: ${{ env.PIP_EXECUTABLE }}
-
 jobs:
   # Setup Python Environments Jobs
   # These jobs will set up the Python environments for the other jobs to use.
