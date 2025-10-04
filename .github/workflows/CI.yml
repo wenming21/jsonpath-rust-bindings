@@ -104,13 +104,15 @@ jobs:
         runner: [macos-13, macos-14]
         include:
           - runner: macos-13
+            target: x86_64
             versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
           - runner: macos-14
+            target: aarch64
             versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
     steps:
       - uses: actions/checkout@v5
 
-      - name: Install Python versions (${{ matrix.runner }})
+      - name: Install Python versions (${{ matrix.runner }} - ${{ matrix.target }})
         uses: actions/setup-python@v6
         with:
           python-version: ${{ join(matrix.versions, ',') }}
@@ -193,8 +195,11 @@ jobs:
     needs: setup-python-macos
     strategy:
       matrix:
-        runner: [macos-13, macos-14]
-        target: ${{ runner == 'macos-13' && 'x86_64' || 'aarch64' }}
+        include:
+          - runner: macos-13
+            target: x86_64
+          - runner: macos-14
+            target: aarch64
     steps:
       - uses: actions/checkout@v5
 
