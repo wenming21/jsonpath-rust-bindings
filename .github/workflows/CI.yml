@@ -142,7 +142,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.target }}
+          architecture: ${{ matrix.platform.target }}
+          allow-prereleases: true
       # - uses: actions/checkout@v5
       # - name: Install Python versions (${{ matrix.arch }})
       #   uses: actions/setup-python@v6
@@ -175,7 +176,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.target }}
+          allow-prereleases: true
       # - uses: actions/checkout@v5
 
       # - name: Install Python versions (${{ matrix.runner }} - ${{ matrix.target }})
