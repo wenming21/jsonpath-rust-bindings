@@ -90,7 +90,7 @@ jobs:
             target: x86_64
           - runner: macos-15
             target: aarch64
-        python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -190,12 +190,34 @@ jobs:
           args: --release --out target/wheels --find-interpreter
           # args: --release --out target/wheels ${{ startsWith(matrix.python-version, 'pypy') && format('-i {0}', matrix.python-version) || format('-i python{0}', matrix.python-version) }}
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
-
       - name: Upload wheels
         uses: actions/upload-artifact@v4
         with:
           name: wheels-macos-${{ matrix.target }}
           path: target/wheels
+
+  macos-py3.8:
+    runs-on: ${{ matrix.runner }}
+    needs: macos
+    strategy:
+      matrix:
+        python-version: ["3.8"]
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build wheels for all Python versions
+        uses: PyO3/maturin-action@v1
+        with:
+          target: ${{ matrix.target }}
+          # args: --release --out target/wheels --find-interpreter
+          args: --release --out target/wheels -i python3.8
+          sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-macos-${{ matrix.target }}-py3.8
+          path: target/wheels
+
+
 
   sdist:
     runs-on: ubuntu-latest
@@ -217,7 +239,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' }}
     # needs: [linux, musllinux, windows-64, macos, sdist]
-    needs: [macos, sdist]
+    needs: [macos, macos-py3.8, sdist]
     permissions:
       # Use to sign the release artifacts
       id-token: write
