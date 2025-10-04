@@ -119,14 +119,23 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
-      - name: Cache cargo registry
+      - name: Cache cargo dependencies
         uses: actions/cache@v3
+        env:
+          SCCACHE_DIR: ${{ runner.temp }}/sccache
         with:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
             target
+            ${{ runner.temp }}/sccache
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+      - name: Setup sccache
+        run: |
+          echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
+          echo "CARGO_INCREMENTAL=1" >> $GITHUB_ENV
       - name: Set PyPy path
         if: startsWith(matrix.python-version, 'pypy')
         run: echo "PYPY_PATH=$(which ${{ matrix.python-version }}).exe" >> $GITHUB_ENV
