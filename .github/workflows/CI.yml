@@ -119,10 +119,15 @@ jobs:
           python-version: ${{ matrix.python-version }}
           architecture: ${{ matrix.platform.target }}
           allow-prereleases: true
+      - name: Install sccache
+        run: cargo install sccache --locked
       - name: Cache cargo dependencies
         uses: actions/cache@v3
         env:
           SCCACHE_DIR: ${{ runner.temp }}/sccache
+          RUSTC_WRAPPER: sccache
+          CARGO_INCREMENTAL: 1
+          SCCACHE_CACHE_SIZE: "3G"
         with:
           path: |
             ~/.cargo/registry
@@ -132,10 +137,8 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - name: Setup sccache
-        run: |
-          echo "RUSTC_WRAPPER=sccache" >> $GITHUB_ENV
-          echo "CARGO_INCREMENTAL=1" >> $GITHUB_ENV
+      - name: Verify sccache
+        run: sccache --show-stats
       - name: Set PyPy path
         if: startsWith(matrix.python-version, 'pypy')
         run: echo "PYPY_PATH=$(which ${{ matrix.python-version }}).exe" >> $GITHUB_ENV
