@@ -45,29 +45,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
 
-  # 安装Python环境的独立Job - musllinux
-  # setup-python-musllinux:
-  #   runs-on: ${{ matrix.platform.runner }}
-  #   strategy:
-  #     matrix:
-  #       platform:
-  #         - runner: ubuntu-22.04
-  #           target: x86_64
-  #         - runner: ubuntu-22.04
-  #           target: x86
-  #         - runner: ubuntu-22.04
-  #           target: aarch64
-  #         - runner: ubuntu-22.04
-  #           target: armv7
-  #       python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
-  #   steps:
-  #     - uses: actions/checkout@v5
-  #     - uses: actions/setup-python@v6
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
-  #         allow-prereleases: true
-
-  # 安装Python环境的独立Job - Windows
+  # 安装Python环境的独立Job - Windows-64
   setup-python-windows-64:
     name: Setup Python Environments (Windows_64)
     runs-on: ${{ matrix.platform.runner }}
@@ -92,23 +70,6 @@ jobs:
         #       runner: windows-latest
         #       target: x86
         #     python-version: "pypy3.11"
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.platform.target }}
-          allow-prereleases: true
-
-  setup-python-windows-32:
-    name: Setup Python Environments (Windows_32)
-    runs-on: ${{ matrix.platform.runner }}
-    strategy:
-      matrix:
-        platform:
-          - runner: windows-latest
-            target: x86
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14" ]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -198,31 +159,6 @@ jobs:
         platform:
           - runner: windows-latest
             target: x64
-          # - runner: windows-latest
-            # target: x86
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Build wheels for all Python versions
-        uses: PyO3/maturin-action@v1
-        with:
-          target: ${{ matrix.platform.target }}
-          args: --release --out target/wheels --find-interpreter
-          sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
-      - name: Upload wheels
-        uses: actions/upload-artifact@v4
-        with:
-          name: wheels-windows-${{ matrix.platform.target }}
-          path: target/wheels
-
-  windows-32:
-    runs-on: ${{ matrix.platform.runner }}
-    needs: setup-python-windows-32
-    strategy:
-      matrix:
-        platform:
-          - runner: windows-latest
-            target: x86
     steps:
       - uses: actions/checkout@v5
       - name: Build wheels for all Python versions
@@ -250,13 +186,6 @@ jobs:
             target: aarch64
     steps:
       - uses: actions/checkout@v5
-      - name: Set up Python3.8 for macOS_x86_64
-        if: ${{ matrix.target == 'x86_64' }}
-        uses: actions/setup-python@v6
-        with:
-          python-version: 3.8
-          allow-prereleases: true
-          architecture: x86_64
       - name: Build wheels for all Python versions
         uses: PyO3/maturin-action@v1
         with:
@@ -270,7 +199,6 @@ jobs:
           name: wheels-macos-${{ matrix.target }}
           path: target/wheels
 
-  # sdist Job保持原有逻辑
   sdist:
     runs-on: ubuntu-latest
     steps:
@@ -290,7 +218,7 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' }}
-    needs: [linux, musllinux, windows-64, windows-32, macos, sdist]
+    needs: [linux, musllinux, windows-64, macos, sdist]
     permissions:
       # Use to sign the release artifacts
       id-token: write
