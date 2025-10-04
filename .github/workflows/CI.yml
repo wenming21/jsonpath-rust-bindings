@@ -27,17 +27,17 @@ jobs:
     strategy:
       matrix:
         platform:
-          - runner: ubuntu-latest
+          - runner: ubuntu-22.04
             target: x86_64
-          - runner: ubuntu-latest
+          - runner: ubuntu-22.04
             target: x86
-          - runner: ubuntu-latest
+          - runner: ubuntu-22.04
             target: aarch64
-          - runner: ubuntu-latest
+          - runner: ubuntu-22.04
             target: armv7
-          - runner: ubuntu-latest
+          - runner: ubuntu-22.04
             target: s390x
-          - runner: ubuntu-latest
+          - runner: ubuntu-22.04
             target: ppc64le
         python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
     steps:
@@ -83,9 +83,9 @@ jobs:
     strategy:
       matrix:
         platform:
-          - runner: macos-latest
+          - runner: macos-14
             target: x86_64
-          - runner: macos-latest
+          - runner: macos-14
             target: aarch64
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
     steps:
@@ -98,7 +98,7 @@ jobs:
   # Build Jobs
   # These jobs will build the wheels for all Python versions and upload them as artifacts.
   linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: setup-python-linux
     strategy:
       matrix:
@@ -121,7 +121,7 @@ jobs:
           path: target/wheels
 
   musllinux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: setup-python-linux
     strategy:
       matrix:
@@ -149,8 +149,8 @@ jobs:
     strategy:
       matrix:
         platform:
-          - runner: windows-2022
-            target: x86
+          - runner: windows-latest
+            target: x64
     steps:
       - uses: actions/checkout@v5
       - name: Build wheels for all Python versions
@@ -171,9 +171,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - runner: macos-latest
+          - runner: macos-14
             target: x86_64
-          - runner: macos-latest
+          - runner: macos-14
             target: aarch64
     steps:
       - uses: actions/checkout@v5
@@ -207,7 +207,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' }}
+    if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' }}
     needs: [linux, musllinux, windows, macos, sdist]
     permissions:
       # Use to sign the release artifacts
