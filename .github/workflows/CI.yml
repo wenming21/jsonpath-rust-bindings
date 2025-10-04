@@ -21,102 +21,168 @@ permissions:
 jobs:
   # 安装Python环境的独立Job - Linux
   setup-python-linux:
-    name: Setup Python Environments (Linux)
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.platform.runner }}
     strategy:
       matrix:
-        target: [x86_64, x86, aarch64, armv7, s390x, ppc64le]
-        include:
-          - target: x86_64
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
-          - target: x86
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
-          - target: aarch64
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
-          - target: armv7
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
-          - target: s390x
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
-          - target: ppc64le
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        platform:
+          - runner: ubuntu-22.04
+            target: x86_64
+          - runner: ubuntu-22.04
+            target: x86
+          - runner: ubuntu-22.04
+            target: aarch64
+          - runner: ubuntu-22.04
+            target: armv7
+          - runner: ubuntu-22.04
+            target: s390x
+          - runner: ubuntu-22.04
+            target: ppc64le
+        python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+        # include:
+        #   - target: x86_64
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        #   - target: x86
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        #   - target: aarch64
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        #   - target: armv7
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        #   - target: s390x
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        #   - target: ppc64le
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
     steps:
       - uses: actions/checkout@v5
-
-      - name: Install Python versions (${{ matrix.target }})
-        uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6
         with:
-          python-version: ${{ join(matrix.versions, ',') }}
+          python-version: ${{ matrix.python-version }}
           allow-prereleases: true
+      # - uses: actions/checkout@v5
+      # - name: Install Python versions (${{ matrix.target }})
+      # - uses: actions/setup-python@v6
+      #   with:
+      #     python-version: ${{ join(matrix.versions, ',') }}
+      #     allow-prereleases: true
 
   # 安装Python环境的独立Job - musllinux
   setup-python-musllinux:
-    name: Setup Python Environments (musllinux)
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.platform.runner }}
     strategy:
       matrix:
-        target: [x86_64, x86, aarch64, armv7]
-        include:
-          - target: x86_64
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
-          - target: x86
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
-          - target: aarch64
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
-          - target: armv7
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        platform:
+          - runner: ubuntu-22.04
+            target: x86_64
+          - runner: ubuntu-22.04
+            target: x86
+          - runner: ubuntu-22.04
+            target: aarch64
+          - runner: ubuntu-22.04
+            target: armv7
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+        # include:
+        #   - target: x86_64
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        #   - target: x86
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        #   - target: aarch64
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        #   - target: armv7
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
     steps:
       - uses: actions/checkout@v5
-
-      - name: Install Python versions (${{ matrix.target }})
-        uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6
         with:
-          python-version: ${{ join(matrix.versions, ',') }}
+          python-version: ${{ matrix.python-version }}
           allow-prereleases: true
+      # - uses: actions/checkout@v5
+
+      # - name: Install Python versions (${{ matrix.target }})
+      #   uses: actions/setup-python@v6
+      #   with:
+      #     python-version: ${{ join(matrix.versions, ',') }}
+      #     allow-prereleases: true
 
   # 安装Python环境的独立Job - Windows
   setup-python-windows:
     name: Setup Python Environments (Windows)
-    runs-on: windows-latest
+    runs-on: ${{ matrix.platform.runner }}
     strategy:
       matrix:
-        arch: [x64, x86]
-        include:
-          - arch: x64
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
-          - arch: x86
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        platform:
+          - runner: windows-latest
+            target: x64
+          - runner: windows-latest
+            target: x86
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+        exclude:
+          - platform:
+              runner: windows-latest
+              target: x86
+            python-version: "pypy3.9"
+          - platform:
+              runner: windows-latest
+              target: x86
+            python-version: "pypy3.10"
+          - platform:
+              runner: windows-latest
+              target: x86
+            python-version: "pypy3.11"
+    # name: Setup Python Environments (Windows)
+    # runs-on: windows-latest
+    # strategy:
+    #   matrix:
+    #     arch: [x64, x86]
+    #     include:
+    #       - arch: x64
+    #         versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+    #       - arch: x86
+    #         versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v5
-
-      - name: Install Python versions (${{ matrix.arch }})
-        uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6
         with:
-          python-version: ${{ join(matrix.versions, ',') }}
-          architecture: ${{ matrix.arch }}
-          allow-prereleases: true
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.target }}
+      # - uses: actions/checkout@v5
+      # - name: Install Python versions (${{ matrix.arch }})
+      #   uses: actions/setup-python@v6
+      #   with:
+      #     python-version: ${{ join(matrix.versions, ',') }}
+      #     architecture: ${{ matrix.arch }}
+      #     allow-prereleases: true
 
   # 安装Python环境的独立Job - macOS
   setup-python-macos:
     name: Setup Python Environments (macOS)
-    runs-on: ${{ matrix.runner }}
+    runs-on: ${{ matrix.platform.runner }}
     strategy:
       matrix:
-        runner: [macos-13, macos-14]
-        include:
+        platform:
           - runner: macos-13
             target: x86_64
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
           - runner: macos-14
             target: aarch64
-            versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+        # include:
+        #   - runner: macos-13
+        #     target: x86_64
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
+        #   - runner: macos-14
+        #     target: aarch64
+        #     versions: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11"]
     steps:
       - uses: actions/checkout@v5
-
-      - name: Install Python versions (${{ matrix.runner }} - ${{ matrix.target }})
-        uses: actions/setup-python@v6
+      - uses: actions/setup-python@v6
         with:
-          python-version: ${{ join(matrix.versions, ',') }}
-          allow-prereleases: true
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.target }}
+      # - uses: actions/checkout@v5
+
+      # - name: Install Python versions (${{ matrix.runner }} - ${{ matrix.target }})
+      #   uses: actions/setup-python@v6
+      #   with:
+      #     python-version: ${{ join(matrix.versions, ',') }}
+      #     allow-prereleases: true
 
   # Linux构建Job
   linux:
