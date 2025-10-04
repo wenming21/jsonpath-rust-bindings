@@ -36,22 +36,9 @@ jobs:
             target: s390x
           - runner: ubuntu-22.04
             target: ppc64le
-        python-version: [ "3.8", "3.x", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+        python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
     steps:
       - uses: actions/checkout@v5
-      - name: Cache rust build
-        uses: actions/cache@v3
-        with:
-          path: |
-            target
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: rust-${{ matrix.platform.target }}-${{ hashFiles('**/Cargo.lock') }}
-      - name: Cache wheels
-        uses: actions/cache@v3
-        with:
-          path: target/wheels
-          key: wheels-${{ matrix.platform.target }}-${{ matrix.python-version }}
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
@@ -60,7 +47,11 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          args: --release --out target/wheels --find-interpreter
+          if ${{ startsWith(matrix.python-version, 'pypy') }};then
+            args: --release --out target/wheels -i ${{ matrix.python-version }}
+          else
+            args: --release --out target/wheels -i python${{ matrix.python-version }}
+          fi
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
           manylinux: auto
       - name: Upload wheels
@@ -82,22 +73,9 @@ jobs:
             target: aarch64
           - runner: ubuntu-22.04
             target: armv7
-        python-version: ["3.8", "3.x", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
     steps:
       - uses: actions/checkout@v5
-      - name: Cache rust build
-        uses: actions/cache@v3
-        with:
-          path: |
-            target
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: rust-${{ matrix.platform.target }}-${{ hashFiles('**/Cargo.lock') }}
-      - name: Cache wheels
-        uses: actions/cache@v3
-        with:
-          path: target/wheels
-          key: wheels-${{ matrix.platform.target }}-${{ matrix.python-version }}
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
@@ -106,7 +84,11 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          args: --release --out target/wheels --find-interpreter
+          if [[${{ startsWith(matrix.python-version, 'pypy') }}]];then
+            args: --release --out target/wheels -i ${{ matrix.python-version }}
+          else
+            args: --release --out target/wheels -i python${{ matrix.python-version }}
+          fi
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
           manylinux: musllinux_1_2
       - name: Upload wheels
@@ -124,7 +106,7 @@ jobs:
             target: x64
           - runner: windows-latest
             target: x86
-        python-version: ["3.8", "3.x", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
         exclude:
           - platform:
               runner: windows-latest
@@ -140,19 +122,6 @@ jobs:
             python-version: "pypy3.11"
     steps:
       - uses: actions/checkout@v5
-      - name: Cache rust build
-        uses: actions/cache@v3
-        with:
-          path: |
-            target
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: rust-${{ matrix.platform.target }}-${{ hashFiles('**/Cargo.lock') }}
-      - name: Cache wheels
-        uses: actions/cache@v3
-        with:
-          path: target/wheels
-          key: wheels-${{ matrix.platform.target }}-${{ matrix.python-version }}
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
@@ -162,7 +131,11 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          args: --release --out target/wheels --find-interpreter
+          if [[${{ startsWith(matrix.python-version, 'pypy') }}]];then
+            args: --release --out target/wheels -i ${{ matrix.python-version }}
+          else
+          args: --release --out target/wheels -i python${{ matrix.python-version }}
+          fi
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
       - name: Upload wheels
         uses: actions/upload-artifact@v4
@@ -179,22 +152,9 @@ jobs:
             target: x86_64
           - runner: macos-14
             target: aarch64
-        python-version: [ "3.8", "3.x", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
+        python-version: [ "3.8", "3.9", "3.10", "3.11", "3.12", "3.13", "3.14", "pypy3.9", "pypy3.10", "pypy3.11" ]
     steps:
       - uses: actions/checkout@v5
-      - name: Cache rust build
-        uses: actions/cache@v3
-        with:
-          path: |
-            target
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: rust-${{ matrix.platform.target }}-${{ hashFiles('**/Cargo.lock') }}
-      - name: Cache wheels
-        uses: actions/cache@v3
-        with:
-          path: target/wheels
-          key: wheels-${{ matrix.platform.target }}-${{ matrix.python-version }}
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
@@ -203,7 +163,12 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          args: --release --out target/wheels --find-interpreter
+          if [[${{ startsWith(matrix.python-version, 'pypy') }}]];then
+            args: --release --out target/wheels -i ${{ matrix.python-version }}
+          else
+            args: --release --out target/wheels -i python${{ matrix.python-version }}
+          fi
+          # args: --release --out target/wheels -i python
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
       - name: Upload wheels
         uses: actions/upload-artifact@v4
