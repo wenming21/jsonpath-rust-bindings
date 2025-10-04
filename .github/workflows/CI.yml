@@ -47,11 +47,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          if [[${{ startsWith(matrix.python-version, 'pypy') }}]];then
-            args: --release --out target/wheels -i ${{ matrix.python-version }}
-          else
-            args: --release --out target/wheels -i python${{ matrix.python-version }}
-          fi
+          args: --release --out target/wheels ${{ startsWith(matrix.python-version, 'pypy') && format('-i {0}', matrix.python-version) || format('-i python{0}', matrix.python-version) }}
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
           manylinux: auto
       - name: Upload wheels
@@ -84,11 +80,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          if [[${{ startsWith(matrix.python-version, 'pypy') }}]];then
-            args: --release --out target/wheels -i ${{ matrix.python-version }}
-          else
-            args: --release --out target/wheels -i python${{ matrix.python-version }}
-          fi
+          args: --release --out target/wheels ${{ startsWith(matrix.python-version, 'pypy') && format('-i {0}', matrix.python-version) || format('-i python{0}', matrix.python-version) }}
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
           manylinux: musllinux_1_2
       - name: Upload wheels
@@ -131,11 +123,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          if [[${{ startsWith(matrix.python-version, 'pypy') }}]];then
-            args: --release --out target/wheels -i ${{ matrix.python-version }}
-          else
-          args: --release --out target/wheels -i python${{ matrix.python-version }}
-          fi
+          args: --release --out target/wheels ${{ startsWith(matrix.python-version, 'pypy') && format('-i {0}', matrix.python-version) || format('-i python{0}', matrix.python-version) }}
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
       - name: Upload wheels
         uses: actions/upload-artifact@v4
@@ -163,11 +151,7 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.platform.target }}
-          if [[${{ startsWith(matrix.python-version, 'pypy') }}]];then
-            args: --release --out target/wheels -i ${{ matrix.python-version }}
-          else
-            args: --release --out target/wheels -i python${{ matrix.python-version }}
-          fi
+          args: --release --out target/wheels ${{ startsWith(matrix.python-version, 'pypy') && format('-i {0}', matrix.python-version) || format('-i python{0}', matrix.python-version) }}
           # args: --release --out target/wheels -i python
           sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
       - name: Upload wheels
