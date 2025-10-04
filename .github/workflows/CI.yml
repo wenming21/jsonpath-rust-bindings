@@ -197,10 +197,6 @@ jobs:
           path: target/wheels
 
   # macOS构建Job
-          name: wheels-windows-${{ matrix.target }}
-          path: target/wheels
-
-  # macOS构建Job
   macos:
     runs-on: ${{ matrix.runner }}
     needs: setup-python-macos
