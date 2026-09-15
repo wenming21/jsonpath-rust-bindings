@@ -27,9 +27,6 @@ jobs:
   windows-x64:
     runs-on: windows-latest
 
-    env:
-      SCCACHE_DIR: ${{ runner.temp }}/sccache
-
     steps:
       - uses: actions/checkout@v7
 
@@ -40,6 +37,10 @@ jobs:
           key: sccache-windows-x64-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             sccache-windows-x64-
+
+      - name: Set sccache env
+        shell: bash
+        run: echo "SCCACHE_DIR=$RUNNER_TEMP/sccache" >> "$GITHUB_ENV"
 
       - name: Setup UV
         uses: astral-sh/setup-uv@v6
@@ -82,9 +83,6 @@ jobs:
   windows-x86:
     runs-on: windows-latest
 
-    env:
-      SCCACHE_DIR: ${{ runner.temp }}/sccache
-
     steps:
       - uses: actions/checkout@v7
 
@@ -95,6 +93,10 @@ jobs:
           key: sccache-windows-x86-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             sccache-windows-x86-
+
+      - name: Set sccache env
+        shell: bash
+        run: echo "SCCACHE_DIR=$RUNNER_TEMP/sccache" >> "$GITHUB_ENV"
 
       - name: Setup UV
         uses: astral-sh/setup-uv@v6
@@ -136,9 +138,6 @@ jobs:
   windows-arm64:
     runs-on: windows-11-arm
 
-    env:
-      SCCACHE_DIR: ${{ runner.temp }}/sccache
-
     steps:
       - uses: actions/checkout@v7
 
@@ -149,6 +148,10 @@ jobs:
           key: sccache-windows-arm64-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             sccache-windows-arm64-
+
+      - name: Set sccache env
+        shell: bash
+        run: echo "SCCACHE_DIR=$RUNNER_TEMP/sccache" >> "$GITHUB_ENV"
 
       - name: Build wheels for all Python versions
         uses: PyO3/maturin-action@v1
