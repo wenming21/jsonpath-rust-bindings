@@ -32,16 +32,13 @@ jobs:
     continue-on-error: ${{ matrix.allow-failure || false }}
     steps:
       - uses: actions/checkout@v7
+
       - name: Set up Python
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
-          cache: pip
-          cache-dependency-path: pyproject.toml
 
-      - name: Rust build cache
-        uses: Swatinem/rust-cache@v2.9.2
       - name: Create virtualenv and install package
         shell: bash
         run: |
@@ -53,6 +50,7 @@ jobs:
           fi
           pip install -U setuptools wheel maturin pytest virtualenv
           maturin develop --release
+
       - name: Test
         shell: bash
         run: |

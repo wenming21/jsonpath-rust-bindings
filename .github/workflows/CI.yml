@@ -94,6 +94,8 @@ jobs:
             pypy3.11
           architecture: x64
           allow-prereleases: true
+          cache: pip
+          cache-dependency-path: pyproject.toml
 
       - name: Set PyPy paths
         shell: pwsh
@@ -146,6 +148,8 @@ jobs:
           python-version: 3.8
           architecture: x86
           allow-prereleases: true
+          cache: pip
+          cache-dependency-path: pyproject.toml
 
       - name: Build wheels for all Python versions
         uses: PyO3/maturin-action@v1
