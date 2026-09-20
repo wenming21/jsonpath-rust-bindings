@@ -38,28 +38,6 @@ jobs:
       - name: Install Python3.8 and multiple PyPy version
         run: uv python install 3.8 pypy3.11
 
-      # - name: Set PyPy paths
-      #   shell: pwsh
-      #   run: |
-      #     $PYPY_PATHS = @()
-      #     $versions = @("3.11")
-
-      #     foreach ($version in $versions) {
-      #         $command = "pypy$version"
-      #         $pypyCommand = Get-Command $command -ErrorAction SilentlyContinue
-      #         if ($pypyCommand) {
-      #             $path = "$($pypyCommand.Source)"
-      #             $PYPY_PATHS += $path
-      #             Write-Host "Found PyPy$version : $path"
-      #         } else {
-      #             Write-Host "PyPy$version not found"
-      #         }
-      #     }
-
-      #     $PYPY_PATHS_STRING = $PYPY_PATHS -join " "
-      #     Write-Host "All PyPy paths: $PYPY_PATHS_STRING"
-      #     echo "PYPY_PATHS=$PYPY_PATHS_STRING" >> $env:GITHUB_ENV
-
       - name: Build wheels for all Python versions
         uses: PyO3/maturin-action@v1.51.0
         with:

@@ -33,30 +33,21 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v7
+      - name: Install UV
+        uses: astral-sh/setup-uv@v10.1.0
         with:
-          python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
+          enable-cache: true
 
-      - name: Create virtualenv and install package
+      - name: Install Python
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Create virtualenv and install dependencies
         shell: bash
         run: |
-          python -m venv env
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            source env/Scripts/activate
-          else
-            source env/bin/activate
-          fi
-          pip install -U setuptools wheel maturin pytest virtualenv
-          maturin develop --release
+          uv venv
+          uv pip install -U setuptools wheel maturin pytest virtualenv
+          uv run maturin develop --release
 
       - name: Test
         shell: bash
-        run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            source env/Scripts/activate
-          else
-            source env/bin/activate
-          fi
-          python -m pytest
+        run: uv run pytest
