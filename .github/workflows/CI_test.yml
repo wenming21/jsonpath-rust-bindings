@@ -35,8 +35,8 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Install Python3.8 and multiple PyPy version
-        run: uv python install 3.8 pypy3.11
+      - name: Install all Python versions
+        run: uv python install 3.8 3.9 3.10 3.11 3.12 3.13 3.14 3.15 pypy3.11
 
       # - name: Build wheels for all Python versions
       #   uses: PyO3/maturin-action@v1.51.0
@@ -94,7 +94,7 @@ jobs:
           enable-cache: true
 
       - name: Install Python3.8
-        run: uv python install cpython-3.8-windows-i686-none
+        run: uv python install cpython-3.8-windows-i686-none cpython-3.9-windows-i686-none cpython-3.10-windows-i686-none cpython-3.11-windows-i686-none cpython-3.12-windows-i686-none cpython-3.13-windows-i686-none cpython-3.14-windows-i686-none cpython-3.15-windows-i686-none
 
         # with:
         #   python-version: 3.8
