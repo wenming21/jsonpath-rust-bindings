@@ -30,15 +30,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install Python3.8 and multiple PyPy version
-        uses: actions/setup-python@v7
+      - name: Install UV
+        uses: astral-sh/setup-uv@v10.1.0
         with:
-          python-version: |
-            3.8
-            pypy3.11
-            pypy3.12
-          architecture: x64
-          allow-prereleases: true
+          enable-cache: true
+
+      - name: Install Python3.8 and multiple PyPy version
+        run: uv python install 3.8 pypy3.11 pypy3.12
 
       - name: Set PyPy paths
         shell: pwsh
@@ -86,15 +84,21 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install Python3.8
-        uses: actions/setup-python@v7
+      - name: Install UV
+        uses: astral-sh/setup-uv@v10.1.0
         with:
-          python-version: 3.8
-          architecture: x86
-          allow-prereleases: true
+          enable-cache: true
+
+      - name: Install Python3.8
+        run: uv python install cpython-3.8-windows-i686-none
+
+        # with:
+        #   python-version: 3.8
+        #   architecture: x86
+        #   allow-prereleases: true
 
       - name: Build wheels for all Python versions
-        uses: PyO3/maturin-action@v1
+        uses: PyO3/maturin-action@v1.51.0
         with:
           target: x86
           args: |
@@ -115,7 +119,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Build wheels for all Python versions
-        uses: PyO3/maturin-action@v1
+        uses: PyO3/maturin-action@v1.51.0
         with:
           target: aarch64-pc-windows-msvc
           args: |
@@ -136,7 +140,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Build sdist
-        uses: PyO3/maturin-action@v1
+        uses: PyO3/maturin-action@v1.51.0
         with:
           command: sdist
           args: --out target/wheels
