@@ -51,22 +51,30 @@ jobs:
           # sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Build wheels for all Python versions
-        shell: bash
+        shell: pwsh
         run: |
-          set -e
-          for v in 3.8 3.9 3.10 3.11 3.12 3.13 3.14 3.15 pypy3.11; do
-            interp=$(uv python find $v)
+          $ErrorActionPreference = 'Stop'
+          $versions = @('3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14', '3.15', 'pypy3.11')
+          $jobs = @()
+          foreach ($v in $versions) {
+            $interp = uv python find $v
+            $logFile = "build-$v.log"
+            $jobs += Start-Job -ScriptBlock {
+              param($interp, $v, $logFile)
+              uvx maturin build --release --interpreter $interp --target-dir "target/$v" *> $logFile
+            } -ArgumentList $interp, $v, $logFile
+          }
+          Wait-Job -Job $jobs
+          Receive-Job -Job $jobs
 
-            uvx maturin build --release --interpreter "$interp" \
-              --target-dir "target/$v" > "build-$v.log" 2>&1 &
-          done
-          wait
-
-          mkdir -p target/wheels
-          for v in 3.8 3.9 3.10 3.11 3.12 3.13 3.14 3.15 pypy3.11; do
-            cp "target/$v/wheels"/*.whl target/wheels/ 2>/dev/null || true
-          done
-          ls target/wheels/
+          New-Item -ItemType Directory -Force -Path target/wheels | Out-Null
+          foreach ($v in $versions) {
+            $wheelPath = "target/$v/wheels"
+            if (Test-Path $wheelPath) {
+              Get-ChildItem "$wheelPath/*.whl" | ForEach-Object { Copy-Item $_ target/wheels/ }
+            }
+          }
+          Get-ChildItem target/wheels/
 
       - name: Upload wheels
         uses: actions/upload-artifact@v7
@@ -104,22 +112,30 @@ jobs:
       #     sccache: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
       - name: Build wheels for all Python versions
-        shell: bash
+        shell: pwsh
         run: |
-          set -e
-          for v in 3.8 3.9 3.10 3.11 3.12 3.13 3.14 3.15; do
-            interp=$(uv python find $v)
+          $ErrorActionPreference = 'Stop'
+          $versions = @('3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14', '3.15')
+          $jobs = @()
+          foreach ($v in $versions) {
+            $interp = uv python find $v
+            $logFile = "build-$v.log"
+            $jobs += Start-Job -ScriptBlock {
+              param($interp, $v, $logFile)
+              uvx maturin build --release --interpreter $interp --target-dir "target/$v" *> $logFile
+            } -ArgumentList $interp, $v, $logFile
+          }
+          Wait-Job -Job $jobs
+          Receive-Job -Job $jobs
 
-            uvx maturin build --release --interpreter "$interp" \
-              --target-dir "target/$v" > "build-$v.log" 2>&1 &
-          done
-          wait
-
-          mkdir -p target/wheels
-          for v in 3.8 3.9 3.10 3.11 3.12 3.13 3.14 3.15; do
-            cp "target/$v/wheels"/*.whl target/wheels/ 2>/dev/null || true
-          done
-          ls target/wheels/
+          New-Item -ItemType Directory -Force -Path target/wheels | Out-Null
+          foreach ($v in $versions) {
+            $wheelPath = "target/$v/wheels"
+            if (Test-Path $wheelPath) {
+              Get-ChildItem "$wheelPath/*.whl" | ForEach-Object { Copy-Item $_ target/wheels/ }
+            }
+          }
+          Get-ChildItem target/wheels/
 
       - name: Upload wheels
         uses: actions/upload-artifact@v7
