@@ -38,6 +38,11 @@ jobs:
       - name: Install all Python versions
         run: uv python install 3.8 3.9 3.10 3.11 3.12 3.13 3.14 3.15 pypy3.11
 
+      - name : Install sccache and maturin
+        run: |
+          uv tool install sccache
+          uv tool install maturin
+
       - name: Build wheels for all Python versions
         shell: pwsh
         run: |
@@ -101,6 +106,11 @@ jobs:
           cpython-3.14-windows-i686-none
           cpython-3.15-windows-i686-none
 
+      - name: Install sccache and maturin
+        run: |
+          uv tool install sccache
+          uv tool install maturin
+
       - name: Build wheels for all Python versions
         shell: pwsh
         run: |
@@ -154,6 +164,11 @@ jobs:
 
       - name: Install all Python versions
         run: uv python install 3.11 3.12 3.13 3.14 3.15
+
+      - name: Install sccache and maturin
+        run: |
+          uv tool install sccache
+          uv tool install maturin
 
       - name: Build wheels for all Python versions
         shell: pwsh
