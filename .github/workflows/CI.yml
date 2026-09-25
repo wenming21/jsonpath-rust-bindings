@@ -38,6 +38,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - uses: Swatinem/rust-cache@v2.9.2
+
       - name: Build wheels for all Python versions
         uses: PyO3/maturin-action@v1
         with:
@@ -63,6 +65,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - uses: Swatinem/rust-cache@v2.9.2
+
       - name: Build wheels for all Python versions
         uses: PyO3/maturin-action@v1
         with:
@@ -85,6 +89,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
+
+      - uses: Swatinem/rust-cache@v2.9.2
 
       - name: Install UV
         uses: astral-sh/setup-uv@v10.1.0
@@ -117,12 +123,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - uses: Swatinem/rust-cache@v2.9.2
+
       - name: Install UV
         uses: astral-sh/setup-uv@v10.1.0
         with:
           enable-cache: true
 
-      - name: Install Python 3.8
+      - name: Install all Python versions
         run: >
           uv python install
           cpython-3.8-windows-i686-none
@@ -155,6 +163,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - uses: Swatinem/rust-cache@v2.9.2
+
       - name: Build wheels for all Python versions
         uses: PyO3/maturin-action@v1
         with:
@@ -178,6 +188,8 @@ jobs:
         target: [x86_64, aarch64]
     steps:
       - uses: actions/checkout@v7
+
+      - uses: Swatinem/rust-cache@v2.9.2
 
       - name: Build wheels for all Python versions
         uses: PyO3/maturin-action@v1
