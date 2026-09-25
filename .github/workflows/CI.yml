@@ -86,36 +86,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install Python3.8 and multiple PyPy version
-        uses: actions/setup-python@v7
+      - name: Install UV
+        uses: astral-sh/setup-uv@v10.1.0
         with:
-          python-version: |
-            3.8
-            pypy3.11
-          architecture: x64
-          allow-prereleases: true
+          enable-cache: true
 
-      - name: Set PyPy paths
-        shell: pwsh
-        run: |
-          $PYPY_PATHS = @()
-          $versions = @("3.11")
-
-          foreach ($version in $versions) {
-              $command = "pypy$version"
-              $pypyCommand = Get-Command $command -ErrorAction SilentlyContinue
-              if ($pypyCommand) {
-                  $path = "$($pypyCommand.Source)"
-                  $PYPY_PATHS += $path
-                  Write-Host "Found PyPy$version : $path"
-              } else {
-                  Write-Host "PyPy$version not found"
-              }
-          }
-
-          $PYPY_PATHS_STRING = $PYPY_PATHS -join " "
-          Write-Host "All PyPy paths: $PYPY_PATHS_STRING"
-          echo "PYPY_PATHS=$PYPY_PATHS_STRING" >> $env:GITHUB_ENV
+      - name: Install all Python versions
+        run: uv python install 3.8 3.9 3.10 3.11 3.12 3.13 3.14 3.15 pypy3.11
 
       - name: Build wheels for all Python versions
         uses: PyO3/maturin-action@v1
@@ -140,12 +117,22 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install Python3.8
-        uses: actions/setup-python@v7
+      - name: Install UV
+        uses: astral-sh/setup-uv@v10.1.0
         with:
-          python-version: 3.8
-          architecture: x86
-          allow-prereleases: true
+          enable-cache: true
+
+      - name: Install Python 3.8
+        run: >
+          uv python install
+          cpython-3.8-windows-i686-none
+          cpython-3.9-windows-i686-none
+          cpython-3.10-windows-i686-none
+          cpython-3.11-windows-i686-none
+          cpython-3.12-windows-i686-none
+          cpython-3.13-windows-i686-none
+          cpython-3.14-windows-i686-none
+          cpython-3.15-windows-i686-none
 
       - name: Build wheels for all Python versions
         uses: PyO3/maturin-action@v1
