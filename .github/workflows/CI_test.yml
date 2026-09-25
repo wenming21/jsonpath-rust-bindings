@@ -44,9 +44,6 @@ jobs:
           # Exit immediately if any command fails
           $ErrorActionPreference = 'Stop'
 
-          # Change to the script's directory
-          Set-Location $PSScriptRoot
-
           # Record the start time for measuring total build duration
           $startTime = Get-Date
           Write-Host ">>> Start parallel building Python wheels... (Start time: $($startTime.ToString('yyyy-MM-dd HH:mm:ss')))"
@@ -114,9 +111,6 @@ jobs:
           # Exit immediately if any command fails
           $ErrorActionPreference = 'Stop'
 
-          # Change to the script's directory
-          Set-Location $PSScriptRoot
-
           # Record the start time for measuring total build duration
           $startTime = Get-Date
           Write-Host ">>> Start parallel building Python wheels... (Start time: $($startTime.ToString('yyyy-MM-dd HH:mm:ss')))"
@@ -175,9 +169,6 @@ jobs:
         run: |
           # Exit immediately if any command fails
           $ErrorActionPreference = 'Stop'
-
-          # Change to the script's directory
-          Set-Location $PSScriptRoot
 
           # Record the start time for measuring total build duration
           $startTime = Get-Date
