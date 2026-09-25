@@ -38,7 +38,7 @@ jobs:
       - name: Install all Python versions
         run: uv python install 3.8 3.9 3.10 3.11 3.12 3.13 3.14 3.15 pypy3.11
 
-      - name : Install sccache and maturin
+      - name : Install maturin
         run: |
           uv tool install maturin
 
@@ -51,21 +51,21 @@ jobs:
           $versions = @('3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14', '3.15', 'pypy3.11')
 
           # 先用一个版本串行预热缓存
-          $first = & uv python find $versions[0]
-          Write-Host ">>> 预热编译缓存 (Python $($versions[0])) ..."
-          & uvx maturin build --release --interpreter $first --out target/wheels --target-dir "target/$($versions[0])" 2>&1 | Tee-Object "build-$($versions[0]).log"
-          if ($LASTEXITCODE -ne 0) { throw "预热构建失败，退出码 $LASTEXITCODE" }
+          # $first = & uv python find $versions[0]
+          # Write-Host ">>> 预热编译缓存 (Python $($versions[0])) ..."
+          # & uvx maturin build --release --interpreter $first --out target/wheels --target-dir "target/$($versions[0])" 2>&1 | Tee-Object "build-$($versions[0]).log"
+          # if ($LASTEXITCODE -ne 0) { throw "预热构建失败，退出码 $LASTEXITCODE" }
 
           # 其余版本并行
-          $rest = $versions[1..($versions.Count - 1)]
-          $rest | ForEach-Object -Parallel {
+          # $rest = $versions[1..($versions.Count - 1)]
+          $versions | ForEach-Object -Parallel {
               $v = $_
               $interp = & uv python find $v 2>$null
               if ($LASTEXITCODE -eq 0 -and $interp) {
                   Write-Host ">>> Launching Python $v build..."
                   & uvx maturin build --release --interpreter $interp --out target/wheels --target-dir "target/$v" 2>&1 | Tee-Object "build-$v.log"
               }
-          } -ThrottleLimit ($rest.Count * 2)   # 限流值 >= 任务数，等同全部同时启动
+          } -ThrottleLimit ($versions.Count * 2)   # 限流值 >= 任务数，等同全部同时启动
 
           # -Parallel 在所有线程结束后才返回，无需额外 wait
 
@@ -103,9 +103,10 @@ jobs:
           cpython-3.14-windows-i686-none
           cpython-3.15-windows-i686-none
 
-      - name: Install sccache and maturin
+      - name: Install maturin and add rust target
         run: |
           uv tool install maturin
+          rustup target add i686-pc-windows-msvc
 
       - name: Build wheels for all Python versions
         shell: pwsh
@@ -116,21 +117,27 @@ jobs:
           $versions = @('3.8', '3.9', '3.10', '3.11', '3.12', '3.13', '3.14', '3.15')
 
           # 先用一个版本串行预热缓存
-          $first = & uv python find $versions[0]
-          Write-Host ">>> 预热编译缓存 (Python $($versions[0])) ..."
-          & uvx maturin build --release --interpreter $first --out target/wheels --target-dir "target/$($versions[0])" 2>&1 | Tee-Object "build-$($versions[0]).log"
-          if ($LASTEXITCODE -ne 0) { throw "预热构建失败，退出码 $LASTEXITCODE" }
+          # $first = & uv python find $versions[0]
+          # Write-Host ">>> 预热编译缓存 (Python $($versions[0])) ..."
+          # & uvx maturin build --release `
+          #   --target i686-pc-windows-msvc `
+          #   --interpreter $first --out target/wheels `
+          #   --target-dir "target/$($versions[0])" 2>&1 | Tee-Object "build-$($versions[0]).log"
+          # if ($LASTEXITCODE -ne 0) { throw "预热构建失败，退出码 $LASTEXITCODE" }
 
           # 其余版本并行
-          $rest = $versions[1..($versions.Count - 1)]
-          $rest | ForEach-Object -Parallel {
+          # $rest = $versions[1..($versions.Count - 1)]
+          $versions | ForEach-Object -Parallel {
               $v = $_
               $interp = & uv python find $v 2>$null
               if ($LASTEXITCODE -eq 0 -and $interp) {
                   Write-Host ">>> Launching Python $v build..."
-                  & uvx maturin build --release --interpreter $interp --out target/wheels --target-dir "target/$v" 2>&1 | Tee-Object "build-$v.log"
+                  & uvx maturin build --release `
+                    --target i686-pc-windows-msvc `
+                    --interpreter $interp --out target/wheels `
+                    --target-dir "target/$v" 2>&1 | Tee-Object "build-$v.log"
               }
-          } -ThrottleLimit ($rest.Count * 2)   # 限流值 >= 任务数，等同全部同时启动
+          } -ThrottleLimit ($versions.Count * 2)   # 限流值 >= 任务数，等同全部同时启动
 
           # -Parallel 在所有线程结束后才返回，无需额外 wait
 
@@ -159,9 +166,10 @@ jobs:
       - name: Install all Python versions
         run: uv python install 3.11 3.12 3.13 3.14 3.15
 
-      - name: Install sccache and maturin
+      - name: Install maturin and add rust target
         run: |
           uv tool install maturin
+          rustup target add aarch64-pc-windows-msvc
 
       - name: Build wheels for all Python versions
         shell: pwsh
@@ -172,20 +180,26 @@ jobs:
           $versions = @('3.11', '3.12', '3.13', '3.14', '3.15')
 
           # 先用一个版本串行预热缓存
-          $first = & uv python find $versions[0]
-          Write-Host ">>> 预热编译缓存 (Python $($versions[0])) ..."
-          & uvx maturin build --release --interpreter $first --out target/wheels --target-dir "target/$($versions[0])" 2>&1 | Tee-Object "build-$($versions[0]).log"
+          # $first = & uv python find $versions[0]
+          # Write-Host ">>> 预热编译缓存 (Python $($versions[0])) ..."
+          # & uvx maturin build --release `
+          #   --target aarch64-pc-windows-msvc `
+          #   --interpreter $first --out target/wheels `
+          #   --target-dir "target/$($versions[0])" 2>&1 | Tee-Object "build-$($versions[0]).log"
 
           # 其余版本并行
-          $rest = $versions[1..($versions.Count - 1)]
-          $rest | ForEach-Object -Parallel {
+          # $rest = $versions[1..($versions.Count - 1)]
+          $versions | ForEach-Object -Parallel {
               $v = $_
               $interp = & uv python find $v 2>$null
               if ($LASTEXITCODE -eq 0 -and $interp) {
                   Write-Host ">>> Launching Python $v build..."
-                  & uvx maturin build --release --interpreter $interp --out target/wheels --target-dir "target/$v" 2>&1 | Tee-Object "build-$v.log"
+                  & uvx maturin build --release `
+                    --target aarch64-pc-windows-msvc `
+                    --interpreter $interp --out target/wheels `
+                    --target-dir "target/$v" 2>&1 | Tee-Object "build-$v.log"
               }
-          } -ThrottleLimit ($rest.Count * 2)   # 限流值 >= 任务数，等同全部同时启动
+          } -ThrottleLimit ($versions.Count * 2)   # 限流值 >= 任务数，等同全部同时启动
 
           # -Parallel 在所有线程结束后才返回，无需额外 wait
 
