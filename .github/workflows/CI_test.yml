@@ -51,7 +51,7 @@ jobs:
           # 先用一个版本串行预热缓存
           $first = & uv python find $versions[0]
           Write-Host ">>> 预热编译缓存 (Python $($versions[0])) ..."
-          & uvx maturin build --release --interpreter $first --out target/wheels --target-dir "target/$($versions[0])" *> "build-$($versions[0]).log"
+          & uvx maturin build --release --interpreter $first --out target/wheels --target-dir "target/$($versions[0])" 2>&1 | Tee-Object "build-$($versions[0]).log"
           if ($LASTEXITCODE -ne 0) { throw "预热构建失败，退出码 $LASTEXITCODE" }
 
           # 其余版本并行
@@ -61,7 +61,7 @@ jobs:
               $interp = & uv python find $v 2>$null
               if ($LASTEXITCODE -eq 0 -and $interp) {
                   Write-Host ">>> Launching Python $v build..."
-                  & uvx maturin build --release --interpreter $interp --out target/wheels --target-dir "target/$v" *> "build-$v.log"
+                  & uvx maturin build --release --interpreter $interp --out target/wheels --target-dir "target/$v" 2>&1 | Tee-Object "build-$v.log"
               }
           } -ThrottleLimit ($rest.Count * 2)   # 限流值 >= 任务数，等同全部同时启动
 
@@ -114,7 +114,7 @@ jobs:
           # 先用一个版本串行预热缓存
           $first = & uv python find $versions[0]
           Write-Host ">>> 预热编译缓存 (Python $($versions[0])) ..."
-          & uvx maturin build --release --interpreter $first --out target/wheels --target-dir "target/$($versions[0])" *> "build-$($versions[0]).log"
+          & uvx maturin build --release --interpreter $first --out target/wheels --target-dir "target/$($versions[0])" 2>&1 | Tee-Object "build-$($versions[0]).log"
           if ($LASTEXITCODE -ne 0) { throw "预热构建失败，退出码 $LASTEXITCODE" }
 
           # 其余版本并行
@@ -124,7 +124,7 @@ jobs:
               $interp = & uv python find $v 2>$null
               if ($LASTEXITCODE -eq 0 -and $interp) {
                   Write-Host ">>> Launching Python $v build..."
-                  & uvx maturin build --release --interpreter $interp --out target/wheels --target-dir "target/$v" *> "build-$v.log"
+                  & uvx maturin build --release --interpreter $interp --out target/wheels --target-dir "target/$v" 2>&1 | Tee-Object "build-$v.log"
               }
           } -ThrottleLimit ($rest.Count * 2)   # 限流值 >= 任务数，等同全部同时启动
 
@@ -168,8 +168,7 @@ jobs:
           # 先用一个版本串行预热缓存
           $first = & uv python find $versions[0]
           Write-Host ">>> 预热编译缓存 (Python $($versions[0])) ..."
-          & uvx maturin build --release --interpreter $first --out target/wheels --target-dir "target/$($versions[0])" *> "build-$($versions[0]).log"
-          if ($LASTEXITCODE -ne 0) { throw "预热构建失败，退出码 $LASTEXITCODE" }
+          & uvx maturin build --release --interpreter $first --out target/wheels --target-dir "target/$($versions[0])" 2>&1 | Tee-Object "build-$($versions[0]).log"
 
           # 其余版本并行
           $rest = $versions[1..($versions.Count - 1)]
@@ -178,7 +177,7 @@ jobs:
               $interp = & uv python find $v 2>$null
               if ($LASTEXITCODE -eq 0 -and $interp) {
                   Write-Host ">>> Launching Python $v build..."
-                  & uvx maturin build --release --interpreter $interp --out target/wheels --target-dir "target/$v" *> "build-$v.log"
+                  & uvx maturin build --release --interpreter $interp --out target/wheels --target-dir "target/$v" 2>&1 | Tee-Object "build-$v.log"
               }
           } -ThrottleLimit ($rest.Count * 2)   # 限流值 >= 任务数，等同全部同时启动
 
