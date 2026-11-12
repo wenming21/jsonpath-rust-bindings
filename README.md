@@ -4,6 +4,7 @@
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/night-crawler/jsonpath-rust-bindings/CI.yml)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/night-crawler/jsonpath-rust-bindings/test.yml?label=tests)
 ![piwheels (including prereleases)](https://img.shields.io/piwheels/v/jsonpath-rust-bindings)
+[![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://app.codspeed.io/wenming21/jsonpath-rust-bindings?utm_source=badge)
 
 This package contains Python bindings for [jsonpath-rust](https://github.com/besok/jsonpath-rust) library by [besok](https://github.com/besok).
 
@@ -138,4 +139,15 @@ Update CI:
 
 ```bash
 maturin generate-ci github > ./.github/workflows/CI.yml
+```
+
+## Benchmarks
+
+Benchmarks live in `tests/test_benchmarks.py` and are tracked with [CodSpeed](https://codspeed.io).
+To run them locally:
+
+```bash
+pip install pytest pytest-codspeed
+maturin develop --release
+pytest tests/test_benchmarks.py --codspeed
 ```
